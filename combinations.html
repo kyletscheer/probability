@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Item Combinations Generator</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css"
+    />
+
+    <style>
+      .content {
+        padding-top: 50px;
+        padding-bottom: 100px;
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+      <div class="container">
+        <a class="navbar-brand" href="index.html"
+          >Event Combination Probability Calculator</a
+        >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarResponsive"
+          aria-controls="navbarResponsive"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="about.html">About</a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="combinations.html">Combinations</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- Page Content -->
+    <div class="content">
+      <h1 class="mb-4">Item Combinations Generator</h1>
+      <div class="form-group">
+        <label for="itemList">Enter a list of items (comma-separated):</label>
+        <input type="text" class="form-control" id="itemList" />
+      </div>
+      <button class="btn btn-primary mt-2" onclick="generateCombinations()">
+        Generate Combinations
+      </button>
+      <div class="mt-4">
+        <p>Total Combinations: <span id="totalCombinations"></span></p>
+        <table id="table" class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Combination</th>
+              <th>Item Count</th>
+            </tr>
+          </thead>
+          <tbody id="outputBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <footer class="bg-dark fixed-bottom p-2">
+      <div class="container">
+        <p class="m-0 text-center text-white">
+          &copy;
+          <a href="http://www.kylescheer.com" target="_blank" rel="noopener"
+            >Kyle Scheer</a
+          >
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            style="margin-left: 20px"
+          >
+            <a
+              href="https://github.com/kyletscheer/probability"
+              target="_blank"
+              rel="noopener"
+              >View Code</a
+            >
+          </button>
+        </p>
+      </div>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script>
+      let dataTable;
+
+      function generateCombinations() {
+        const input = document.getElementById("itemList").value;
+        const items = input.split(",").map((item) => item.trim());
+
+        // Validate input to ensure there are items in the list
+        if (items.length === 0 || items[0] === "") {
+          alert("Please enter a list of items.");
+          return;
+        }
+
+        const combinations = getCombinations(items);
+        displayCombinations(combinations);
+      }
+
+      // Function to generate unique combinations while preserving order
+      function getCombinations(items) {
+        const results = [];
+        generateCombination([], items, 0, results);
+        return results;
+      }
+
+      function generateCombination(currentCombination, items, start, results) {
+        results.push([...currentCombination]);
+
+        for (let i = start; i < items.length; i++) {
+          currentCombination.push(items[i]);
+          generateCombination(currentCombination, items, i + 1, results);
+          currentCombination.pop();
+        }
+      }
+      function displayCombinations(combinations) {
+        const outputTableBody = document.getElementById("outputBody");
+        const totalCombinationsSpan =
+          document.getElementById("totalCombinations");
+
+        // Clear previous output
+        outputTableBody.innerHTML = "";
+
+        // Display the combinations
+        combinations.forEach((combination) => {
+          const combinationText = combination.join(", ");
+          const numItems = combination.length;
+          const row = outputTableBody.insertRow();
+          const combinationCell = row.insertCell();
+          const numItemsCell = row.insertCell();
+          combinationCell.textContent = combinationText;
+          numItemsCell.textContent = numItems;
+        });
+
+        // Update the total number of combinations
+        totalCombinationsSpan.textContent = combinations.length;
+
+        // Destroy the previous DataTable, if any, and initialize a new one only if there is data to display
+        if (dataTable && $.fn.DataTable.isDataTable("#table")) {
+          dataTable.destroy();
+        }
+
+        if (combinations.length > 0) {
+          // Initialize DataTables after the data is generated and inserted
+          dataTable = $("#table").DataTable({
+            dom: "Bfrtip",
+            buttons: ["copy", "csv"],
+            lengthMenu: [
+              [10, 25, 50, -1],
+              [10, 25, 50, "All"],
+            ],
+          });
+        }
+      }
+    </script>
+    <script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.print.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

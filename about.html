@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>About - Event Combination Probability Calculator</title>
+    <!-- Add Bootstrap CSS link -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Add Bootstrap JavaScript link (jQuery and Popper.js are required by Bootstrap) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script
+      id="MathJax-script"
+      async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
+
+    <style>
+      .equation {
+        text-align: center;
+      }
+      .content {
+        padding-top: 50px;
+        padding-bottom: 50px;
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+      <div class="container">
+        <a class="navbar-brand" href="index.html"
+          >Event Combination Probability Calculator</a
+        >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarResponsive"
+          aria-controls="navbarResponsive"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="about.html">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="combinations.html">Combinations</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- Page Content -->
+    <div class="content">
+      <h1>About the Calculator</h1>
+
+      <h2>Introduction</h2>
+      <p>
+        The
+        <a href="index.html">Event Combination Probability Calculator</a>
+        is a web application that allows you to calculate probabilities for
+        combinations of independent events. This calculator helps users
+        understand the likelihood of various outcomes when multiple events occur
+        independently of each other.<br /><br />It also generates experiments
+        using a random generator to demonstrate the combination probabilities in
+        practice.
+      </p>
+
+      <h2>Probability Calculation</h2>
+      <p>
+        The probability of an event occurring is represented by a number between
+        0 and 1, where 0 indicates impossibility, and 1 indicates certainty.
+        When dealing with multiple independent events, the probability of their
+        joint occurrence is calculated as the product of their individual
+        probabilities.
+      </p>
+
+      <p>
+        For two independent events A and B, the probability of both events
+        occurring is given by:
+      </p>
+
+      <div class="equation">\( P(A \cap B) = P(A) \times P(B) \)</div>
+      <br />
+      <p>
+        For more than two events, the probability of all events \( A_1, A_2,
+        ..., A_n \) occurring together is calculated as:
+      </p>
+      <div class="equation">
+        \( P(A_1 \cap A_2 \cap ... \cap A_n) = P(A_1) \times P(A_2) \times ...
+        \times P(A_n) \)
+      </div>
+      <br />
+      <h2>Combinations and Complementary Probability</h2>
+      <p>
+        The calculator generates all possible combinations of events and their
+        corresponding probabilities using binary counting. Binary counting
+        refers to an event occurring (1) or not occurring (0). For example, if
+        we have three events A, B, and C, we can represent all possible
+        combinations using binary digits as follows:
+      </p>
+      <ul>
+        <li>000 ~ \( P(\text{None}) = (1 - P(A))(1 - P(B))(1 - P(C)) \)</li>
+        <li>001 ~ \( P(\text{C}) = P(C)(1 - P(A))(1 - P(B)) \)</li>
+        <li>010 ~ \( P(\text{B}) = P(B)(1 - P(A))(1 - P(C)) \)</li>
+        <li>011 ~ \( P(\text{B and C}) = P(B)P(C)(1 - P(A)) \)</li>
+        <li>100 ~ \( P(\text{A}) = P(A)(1 - P(B))(1 - P(C)) \)</li>
+        <li>101 ~ \( P(\text{A and C}) = P(A)P(C)(1 - P(B)) \)</li>
+        <li>110 ~ \( P(\text{A and B}) = P(A)P(B)(1 - P(C)) \)</li>
+        <li>111 ~ \( P(\text{A and B and C}) = P(A)P(B)P(C) \)</li>
+      </ul>
+      <p>
+        The calculator calculates the probability of each combination by
+        multiplying the probabilities of the events that occur and the
+        complement of the probabilities for the events that don't occur. The
+        complement of the probability of an event \( A \) is \( (1 - P(A)) \).
+      </p>
+
+      <p>
+        For example, to calculate the probability of events A and B occurring
+        together while C, D, and E do not occur, you would use:
+      </p>
+
+      <div class="equation">
+        \( P(A \cap B \cap \neg C \cap \neg D \cap \neg E) = P(A) \times P(B)
+        \times (1 - P(C)) \times (1 - P(D)) \times (1 - P(E)) \)
+      </div>
+      <br />
+      <h2>Experimental Results</h2>
+      <p>
+        The calculator runs a specified number of experiments to determine the
+        likelihood of different combinations of events occurring.
+      </p>
+
+      <p>For each simulated experiment:</p>
+      <ul>
+        <li>A random number is generated to simulate the element of chance.</li>
+        <li>
+          The calculator determines which combination of events occurs based on
+          the generated random number and the theoretical probabilities.
+        </li>
+        <li>The occurrences of each combination are counted and recorded.</li>
+      </ul>
+
+      <p>
+        After conducting all experiments, the experimental probabilities for
+        each combination are calculated by dividing the number of occurrences by
+        the total number of experiments.
+      </p>
+
+      <p>Here's an example:</p>
+
+      <p>
+        Suppose we have three events A, B, and C with probabilities \( P(A) =
+        0.3, P(B) = 0.4, \) and \( P(C) = 0.2 \). The calculator runs 1000
+        experiments and records the following occurrences:
+      </p>
+
+      <ul>
+        <li>
+          "A" occurred 150 times. \( P(\text{A}) = \frac{150}{1000} = Y \) (15%)
+        </li>
+        <li>
+          "B" occurred 218 times. \( P(\text{B}) = \frac{218}{1000} = Y \)
+          (21.8%)
+        </li>
+        <li>
+          "C" occurred 86 times. \( P(\text{C}) = \frac{86}{1000} = Y \) (8.6%)
+        </li>
+        <li>
+          "A and B" occurred 103 times. \( P(\text{A and B}) = \frac{103}{1000}
+          = 0.103 \) (10.3%)
+        </li>
+        <li>
+          "A and C" occurred 38 times. \( P(\text{A and C}) = \frac{38}{1000} =
+          0.038 \) (3.8%)
+        </li>
+        <li>
+          "B and C" occurred 64 times. \( P(\text{B and C}) = \frac{64}{1000} =
+          0.064 \) (6.4%)
+        </li>
+        <li>
+          "A, B, and C" occurred 23 times. \( P(\text{A and B and C}) =
+          \frac{23}{1000} = 0.023 \) (2.3%)
+        </li>
+        <li>
+          "None" occurred 318 times. \( P(\text{None}) = \frac{318}{1000} = Y \)
+          (31.8%)
+        </li>
+      </ul>
+
+      <h2>Using the Calculator</h2>
+      <p>To use the Independent Events Probability Calculator:</p>
+
+      <ol>
+        <li>
+          Enter the event names and their probabilities in the input fields.
+        </li>
+        <li>
+          Enter the number of experiments in the "Number of Experiments" field.
+          The higher the number, the closer to the theoretical probability.
+        </li>
+        <li>
+          Click the "Calculate Combinations" button to generate all possible
+          combinations, their theoretical probabilities, and their experimental
+          probabilities.
+        </li>
+      </ol>
+
+      <h2>Conclusion</h2>
+      <p>
+        The Independent Events Combination Probability Calculator is a tool for
+        understanding the probabilities of various outcomes when dealing with
+        multiple independent events. It provides a clear visualization of the
+        different combinations and their probabilities, as well as experimental
+        results to validate theoretical calculations.
+      </p>
+    </div>
+    <footer class="bg-dark fixed-bottom p-2">
+      <div class="container">
+        <p class="m-0 text-center text-white">
+          &copy;
+          <a href="http://www.kylescheer.com" target="_blank" rel="noopener"
+            >Kyle Scheer</a
+          >
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            style="margin-left: 20px"
+          >
+            <a
+              href="https://github.com/kyletscheer/probability"
+              target="_blank"
+              rel="noopener"
+              >View Code</a
+            >
+          </button>
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
