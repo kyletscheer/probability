@@ -6,19 +6,29 @@ function handleFormSubmission(event) {
   calculateCombinations();
   runExperiments(10000);
 }
-
+let eventsLength = 2;
 function addEvent() {
   const eventsContainer = document.getElementById("eventsContainer");
-
-  const eventDiv = document.createElement("div");
-  eventDiv.innerHTML = `
+  const addButton = document.getElementById("addEventButton");
+  if (eventsLength >= 15) {
+    alert(
+      "You've reached the maximum limit of events (15). After 15 events the site times out."
+    );
+    addButton.disabled = true;
+    addButton.classList.add("disabled-button"); // You can create a CSS class for styling
+    return;
+  } else {
+    const eventDiv = document.createElement("div");
+    eventDiv.innerHTML = `
                   <label for="eventName${events.length}">Event Name:</label>
                   <input type="text" id="eventName${events.length}" required />
                   <label for="eventProbability${events.length}">Probability (0-1):</label>
                   <input type="number" min="0" max="1" step="0.0001" id="eventProbability${events.length}" required />
               `;
 
-  eventsContainer.appendChild(eventDiv);
+    eventsContainer.appendChild(eventDiv);
+    eventsLength++;
+  }
 }
 
 function calculateCombinations() {
