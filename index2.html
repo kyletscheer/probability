@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Independent Event Probability Explorer</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <div class="header-content">
+        <h1 class="logo">Independent Event Probability Explorer</h1>
+        <div class="header-actions">
+          <button class="icon-btn" id="themeToggle" title="Toggle theme">
+            <i class="fas fa-moon"></i>
+          </button>
+          <button class="icon-btn" id="helpBtn" title="Help">
+            <i class="fas fa-question-circle"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="container">
+      <!-- Navigation Tabs -->
+      <div class="tabs">
+        <button class="tab active" data-tab="calculator">
+          <i class="fas fa-calculator"></i> Calculator
+        </button>
+        <button class="tab" data-tab="combinations">
+          <i class="fas fa-layer-group"></i> Combinations
+        </button>
+        <button class="tab" data-tab="about">
+          <i class="fas fa-info-circle"></i> About
+        </button>
+      </div>
+
+      <!-- Calculator Tab -->
+      <div class="tab-content active" id="calculator">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Event Configuration</h2>
+            <button class="btn btn-secondary btn-sm" id="examplesBtn">
+              <i class="fas fa-lightbulb"></i> Examples
+            </button>
+          </div>
+
+          <div id="eventsList"></div>
+
+          <div
+            style="
+              display: flex;
+              gap: 0.75rem;
+              flex-wrap: wrap;
+              margin-top: 1rem;
+            "
+          >
+            <button class="btn btn-primary" id="addEventBtn">
+              <i class="fas fa-plus"></i> Add Event
+            </button>
+            <button class="btn btn-secondary" id="clearAllBtn">
+              <i class="fas fa-trash"></i> Clear All
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">Experiment Settings</h3>
+          <div class="form-group">
+            <label for="numExperiments">Number of Experiments</label>
+            <input
+              type="number"
+              id="numExperiments"
+              value="10000"
+              min="100"
+              max="1000000"
+              step="100"
+            />
+          </div>
+          <button
+            class="btn btn-success"
+            id="calculateBtn"
+            style="margin-top: 1rem; width: 100%"
+          >
+            <i class="fas fa-play"></i> Run Simulation
+          </button>
+        </div>
+
+        <div id="resultsSection" style="display: none">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Results Overview</h3>
+              <div style="display: flex; gap: 0.5rem">
+                <button class="btn btn-secondary btn-sm" id="exportCSV">
+                  <i class="fas fa-file-csv"></i> CSV
+                </button>
+                <button class="btn btn-secondary btn-sm" id="exportPDF">
+                  <i class="fas fa-file-pdf"></i> PDF
+                </button>
+                <button class="btn btn-secondary btn-sm" id="shareBtn">
+                  <i class="fas fa-share"></i> Share
+                </button>
+              </div>
+            </div>
+
+            <div class="results-grid" id="statsGrid"></div>
+
+            <div class="toggle-container">
+              <span>Simple View</span>
+              <label class="toggle">
+                <input type="checkbox" id="notationToggle" />
+                <span class="toggle-slider"></span>
+              </label>
+              <span>Full Notation</span>
+            </div>
+
+            <div class="chart-container">
+              <canvas id="probabilityChart"></canvas>
+            </div>
+
+            <div
+              class="animation-container"
+              id="animationContainer"
+              style="display: none"
+            >
+              <h4>Experiment Animation</h4>
+              <p id="animationStatus">Running experiments...</p>
+              <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+              </div>
+              <div class="experiment-viz" id="experimentViz"></div>
+            </div>
+
+            <div class="table-container">
+              <table id="resultsTable">
+                <thead>
+                  <tr>
+                    <th>Combination</th>
+                    <th>Events</th>
+                    <th>Theoretical</th>
+                    <th>Experimental</th>
+                    <th>Difference</th>
+                  </tr>
+                </thead>
+                <tbody id="resultsBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card" id="breakdownSection">
+            <h3 class="card-title">Step-by-Step Calculation</h3>
+            <div id="calculationBreakdown"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Combinations Tab -->
+      <div class="tab-content" id="combinations">
+        <div class="card">
+          <h2 class="card-title">Item Combinations Generator</h2>
+          <div class="form-group">
+            <label for="itemList">Enter items (comma-separated)</label>
+            <input
+              type="text"
+              id="itemList"
+              placeholder="e.g., Apple, Banana, Orange"
+            />
+          </div>
+          <button
+            class="btn btn-primary"
+            id="generateCombosBtn"
+            style="margin-top: 1rem"
+          >
+            <i class="fas fa-magic"></i> Generate Combinations
+          </button>
+
+          <div
+            id="combinationsResults"
+            style="display: none; margin-top: 1.5rem"
+          >
+            <div class="alert alert-info">
+              <i class="fas fa-info-circle"></i>
+              <span
+                >Total Combinations: <strong id="totalCombos">0</strong></span
+              >
+            </div>
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Combination</th>
+                    <th>Item Count</th>
+                  </tr>
+                </thead>
+                <tbody id="combosTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- About Tab -->
+      <div class="tab-content" id="about">
+        <div class="card">
+          <h2 class="card-title">About This Tool</h2>
+          <p style="margin-bottom: 1.5rem">
+            The Independent Event Probability Explorer is an educational
+            statistics tool designed to help you understand and visualize the
+            probabilities of independent events. Whether you're a student
+            learning probability theory, a data analyst working with risk
+            calculations, or simply curious about how chance works, this tool
+            provides an interactive way to explore complex probability
+            scenarios.
+          </p>
+
+          <h3 style="margin-top: 2rem; margin-bottom: 1rem">How It Works</h3>
+          <p style="margin-bottom: 1rem">
+            The calculator uses fundamental probability principles for
+            independent events. When events are independent, the probability of
+            multiple events occurring together is the product of their
+            individual probabilities.
+          </p>
+          <p style="margin-bottom: 1rem">
+            For example, if Event A has a 30% chance (0.3) and Event B has a 40%
+            chance (0.4), the probability of both occurring is 0.3 × 0.4 = 0.12
+            (12%). The tool also calculates complementary probabilities - the
+            chance that an event does NOT occur, which is 1 minus its
+            probability.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Examples Modal -->
+    <div class="modal" id="examplesModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">Example Scenarios</h2>
+          <button class="icon-btn" id="closeExamplesModal">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="example-grid" id="examplesList"></div>
+      </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div class="modal" id="helpModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">Quick Guide</h2>
+          <button class="icon-btn" id="closeHelpModal">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div style="line-height: 1.8">
+          <h3 style="margin-top: 1rem">Getting Started</h3>
+          <ol style="margin-left: 1.5rem">
+            <li>Add events using the "Add Event" button</li>
+            <li>Enter event names and probabilities (0-1)</li>
+            <li>Set the number of experiments to run</li>
+            <li>Click "Run Simulation" to see results</li>
+          </ol>
+
+          <h3 style="margin-top: 1.5rem">Tips</h3>
+          <ul style="margin-left: 1.5rem">
+            <li>Use the Examples button to load pre-configured scenarios</li>
+            <li>
+              Toggle between simple and full notation for better understanding
+            </li>
+            <li>
+              Higher experiment counts give more accurate results (but take
+              longer)
+            </li>
+            <li>Your events are automatically saved in your browser</li>
+            <li>Export results to share or analyze further</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p>Data saved locally in your browser</p>
+      <p>
+        Made by
+        <a href="https://kylescheer.com" target="_blank">Kyle Scheer</a>
+      </p>
+      <p>
+        <a href="https://www.github.com/kyletscheer/probability" target="_blank"
+          >View Code on Github</a
+        >
+      </p>
+      <a
+        href="https://ko-fi.com/scheerapps"
+        target="_blank"
+        rel="noopener"
+        title="Support me on Ko-fi"
+      >
+        <br />
+        <img
+          height="36"
+          style="border: 0px; height: 36px"
+          src="https://storage.ko-fi.com/cdn/kofi5.png?v=6"
+          border="0"
+          alt="Buy Me a Coffee at ko-fi.com"
+        />
+      </a>
+    </footer>
+    <script src="script.js"></script>
+  </body>
+</html>
